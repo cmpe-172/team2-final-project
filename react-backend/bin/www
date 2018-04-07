@@ -8,11 +8,28 @@ var app = require('../app');
 var debug = require('debug')('react-backend:server');
 var http = require('http');
 
+var mysql      = require('mysql');
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'user172',
+  password : '123456',
+  database : 'employees'
+});
+
+connection.connect();
+
+connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
+  if (error) throw error;
+  console.log('The solution is: ', results[0].solution);
+});
+
+connection.end();
+
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '3001');
 app.set('port', port);
 
 /**
