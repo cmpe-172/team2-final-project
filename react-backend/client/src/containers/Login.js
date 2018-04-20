@@ -1,12 +1,16 @@
 import React, { Component } from "react";
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import LoaderButton from "../components/LoaderButton";
 import "./Login.css";
+
+import { Auth } from "aws-amplify";
 
 export default class Login extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            isLoading: false,
             email: "",
             password: ""
         };
@@ -22,8 +26,27 @@ export default class Login extends Component {
         });
     }
 
-    handleSubmit = event => {
+    handleSubmit = async event => {
         event.preventDefault();
+
+        // Signify that we are starting the login loading process...
+        this.setState({ isLoading: true });
+
+        try {
+            await Auth.signIn(this.state.email, this.state.password);
+
+            // Set the user as Authenticated (for saving user's Login Session):
+            this.props.userHasAuthenticated(true); // alert("Logged in");
+
+            // Redirect to Home Page after user successfully logs in:
+            this.props.history.push("/");
+
+        } catch (e) {
+            alert(e.message);
+
+            // Login failed, so signify that done with the login loading process.
+            this.setState({ isLoading: false });
+        }
     }
 
     render() {
@@ -47,14 +70,17 @@ export default class Login extends Component {
                             type="password"
                         />
                     </FormGroup>
-                    <Button
+
+                    <LoaderButton
                         block
                         bsSize="large"
                         disabled={!this.validateForm()}
                         type="submit"
-                    >
-                        Login
-                    </Button>
+                        isLoading={this.state.isLoading}
+                        text="Login"
+                        loadingText="Logging in…"
+                    />
+
                 </form>
             </div>
         );
