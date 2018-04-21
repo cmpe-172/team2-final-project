@@ -38,8 +38,9 @@ export default class Login extends Component {
             // Set the user as Authenticated (for saving user's Login Session):
             this.props.userHasAuthenticated(true); // alert("Logged in");
 
-            // // Redirect to Home Page after user successfully logs in:
-            // this.props.history.push("/");
+            // TODO: Get the user from the DB:
+            // ....use this.state.email or this.state.password to do MySQL search.
+            // ....use emp_no field to look up in DB.
 
             // Redirect to User's Dashboard after user successfully logs in:
             this.props.history.push("/dashboard");
