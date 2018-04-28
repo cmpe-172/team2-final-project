@@ -20,7 +20,8 @@ class App extends Component {
 
         this.state = {
             isAuthenticated: false,
-            isAuthenticating: true
+            isAuthenticating: true,
+            username: null
         };
     }
 
@@ -45,6 +46,10 @@ class App extends Component {
         this.setState({ isAuthenticated: authenticated });
     }
 
+    setCurrentUsername = usernameFromLogin => {
+        this.setState({ username: usernameFromLogin });
+    }
+
     handleLogout = async event => {
         await Auth.signOut();
 
@@ -59,7 +64,9 @@ class App extends Component {
     render() {
         const childProps = {
             isAuthenticated: this.state.isAuthenticated,
-            userHasAuthenticated: this.userHasAuthenticated
+            userHasAuthenticated: this.userHasAuthenticated,
+            setCurrentUsername: this.setCurrentUsername,
+            username: this.state.username
         };
 
         return (

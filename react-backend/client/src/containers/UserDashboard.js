@@ -14,6 +14,7 @@ export default class UserDashboard extends Component {
 
         this.state = {
             isLoading: false,
+            user_emp_no: null,
             user_employee: null,
             user_department: null,
             user_salary: null
@@ -44,117 +45,124 @@ export default class UserDashboard extends Component {
         //     });
 
 
-        var emp_no = '10004';
+        // DEBUG ONLY:
+        // alert('this.props.username = ' + this.props.username);
 
-        this.getEmployee(emp_no)
-            .then(res => {
-                // alert("success in callGetEmployeeApi");
 
-                //console.log(res);
-                //alert(res);
+        var emp_no = this.props.username; // "10005";
+        // NOTE: setState is async, so must use 'await' or .then:
+        await this.setState({
+            user_emp_no: emp_no
+        });
 
-                // alert('status: ' + res.status);
+        if (this.state.user_emp_no != null) {
+            this.getEmployee(this.state.user_emp_no)
+                .then(res => {
+                    // alert("success in callGetEmployeeApi");
 
-                // alert('res.employee = ' + res.employee);
-                // alert('res.employee.emp_no = ' + res.employee.emp_no); // access variables in the JSON response.
-                // alert('res.employee.first_name = ' + res.employee.first_name);
+                    //console.log(res);
+                    //alert(res);
 
-                // Set this in the state so can use in view (in 'render' function):
-                this.setState({
-                    user_employee: res.employee
+                    // alert('status: ' + res.status);
+
+                    // alert('res.employee = ' + res.employee);
+                    // alert('res.employee.emp_no = ' + res.employee.emp_no); // access variables in the JSON response.
+                    // alert('res.employee.first_name = ' + res.employee.first_name);
+
+                    // Set this in the state so can use in view (in 'render' function):
+                    this.setState({
+                        user_employee: res.employee
+                    });
+                })
+                .catch(err => {
+                    alert("error in getEmployee");
+                    console.log(err);
+                    alert(err);
                 });
-            })
-            .catch(err => {
-                alert("error in getEmployee");
-                console.log(err);
-                alert(err);
-            });
 
 
+            // this.getDepartment('d007')
+            //     .then(res => {
+            //         // alert("success in callGetEmployeeApi");
+            //
+            //         //console.log(res);
+            //         //alert(res);
+            //
+            //         // alert('status: ' + res.status);
+            //
+            //         alert('res.department = ' + res.department);
+            //         alert('res.department.dept_no = ' + res.department.dept_no); // access variables in the JSON response.
+            //         alert('res.department.dept_name = ' + res.department.dept_name);
+            //
+            //         // Set this in the state so can use in view (in 'render' function):
+            //         // TODO:
+            //         // this.setState({
+            //         //     user_employee: res.employee
+            //         // });
+            //     })
+            //     .catch(err => {
+            //         alert("error in getDepartment");
+            //         console.log(err);
+            //         alert(err);
+            //     });
 
 
-        // this.getDepartment('d007')
-        //     .then(res => {
-        //         // alert("success in callGetEmployeeApi");
-        //
-        //         //console.log(res);
-        //         //alert(res);
-        //
-        //         // alert('status: ' + res.status);
-        //
-        //         alert('res.department = ' + res.department);
-        //         alert('res.department.dept_no = ' + res.department.dept_no); // access variables in the JSON response.
-        //         alert('res.department.dept_name = ' + res.department.dept_name);
-        //
-        //         // Set this in the state so can use in view (in 'render' function):
-        //         // TODO:
-        //         // this.setState({
-        //         //     user_employee: res.employee
-        //         // });
-        //     })
-        //     .catch(err => {
-        //         alert("error in getDepartment");
-        //         console.log(err);
-        //         alert(err);
-        //     });
+            this.getEmployeeDepartment(this.state.user_emp_no)
+                .then(res => {
+                    // alert("success in callGetEmployeeApi");
 
+                    //console.log(res);
+                    //alert(res);
 
-        this.getEmployeeDepartment(emp_no)
-            .then(res => {
-                // alert("success in callGetEmployeeApi");
+                    // alert('status: ' + res.status);
 
-                //console.log(res);
-                //alert(res);
+                    // alert('res.employee_department = ' + res.employee_department);
+                    // alert('res.employee_department.dept_no = ' + res.employee_department.dept_no); // access variables in the JSON response.
+                    // alert('res.employee_department.dept_name = ' + res.employee_department.dept_name);
+                    // alert('res.employee_department.emp_no = ' + res.employee_department.emp_no);
 
-                // alert('status: ' + res.status);
-
-                // alert('res.employee_department = ' + res.employee_department);
-                // alert('res.employee_department.dept_no = ' + res.employee_department.dept_no); // access variables in the JSON response.
-                // alert('res.employee_department.dept_name = ' + res.employee_department.dept_name);
-                // alert('res.employee_department.emp_no = ' + res.employee_department.emp_no);
-
-                // Set this in the state so can use in view (in 'render' function):
-                this.setState({
-                    user_department: res.employee_department
+                    // Set this in the state so can use in view (in 'render' function):
+                    this.setState({
+                        user_department: res.employee_department
+                    });
+                })
+                .catch(err => {
+                    alert("error in getDepartment");
+                    console.log(err);
+                    alert(err);
                 });
-            })
-            .catch(err => {
-                alert("error in getDepartment");
-                console.log(err);
-                alert(err);
-            });
 
 
-        this.getEmployeeSalary(emp_no)
-            .then(res => {
-                // alert("success in callGetEmployeeApi");
+            this.getEmployeeSalary(this.state.user_emp_no)
+                .then(res => {
+                    // alert("success in callGetEmployeeApi");
 
-                //console.log(res);
-                //alert(res);
+                    //console.log(res);
+                    //alert(res);
 
-                // alert('status: ' + res.status);
+                    // alert('status: ' + res.status);
 
-                alert('res.employee_salary = ' + res.employee_salary);
-                alert('res.employee_salary.salary = ' + res.employee_salary.salary); // access variables in the JSON response.
-                // alert('res.employee_department.dept_name = ' + res.employee_department.dept_name);
-                // alert('res.employee_department.emp_no = ' + res.employee_department.emp_no);
+                    // alert('res.employee_salary = ' + res.employee_salary);
+                    // alert('res.employee_salary.salary = ' + res.employee_salary.salary); // access variables in the JSON response.
 
-                // Set this in the state so can use in view (in 'render' function):
-                this.setState({
-                    user_salary: res.employee_salary
+                    // Set this in the state so can use in view (in 'render' function):
+                    this.setState({
+                        user_salary: res.employee_salary
+                    });
+                })
+                .catch(err => {
+                    alert("error in getDepartment");
+                    console.log(err);
+                    alert(err);
                 });
-            })
-            .catch(err => {
-                alert("error in getDepartment");
-                console.log(err);
-                alert(err);
-            });
+        }
+        else {
+            alert("ERROR: User emp_no was null.");
+        }
 
+        this.setState({isAuthenticating: false});
 
-
-        this.setState({ isAuthenticating: false });
     }
-
 
     getEmployee = async (emp_no) => {
         const response = await fetch('employee/' + emp_no); // Call API declared in app.js file.
