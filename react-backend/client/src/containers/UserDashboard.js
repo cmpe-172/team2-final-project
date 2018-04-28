@@ -17,7 +17,8 @@ export default class UserDashboard extends Component {
             user_emp_no: null,
             user_employee: null,
             user_department: null,
-            user_salary: null
+            user_salary: null,
+            user_title_info: null
         };
     }
 
@@ -56,6 +57,8 @@ export default class UserDashboard extends Component {
         });
 
         if (this.state.user_emp_no != null) {
+
+            // Load employee info into state:
             this.getEmployee(this.state.user_emp_no)
                 .then(res => {
                     // alert("success in callGetEmployeeApi");
@@ -107,6 +110,7 @@ export default class UserDashboard extends Component {
             //     });
 
 
+            // Load employee department info into state:
             this.getEmployeeDepartment(this.state.user_emp_no)
                 .then(res => {
                     // alert("success in callGetEmployeeApi");
@@ -132,7 +136,7 @@ export default class UserDashboard extends Component {
                     alert(err);
                 });
 
-
+            // Load employee salary info into state:
             this.getEmployeeSalary(this.state.user_emp_no)
                 .then(res => {
                     // alert("success in callGetEmployeeApi");
@@ -155,11 +159,29 @@ export default class UserDashboard extends Component {
                     console.log(err);
                     alert(err);
                 });
+
+
+            // Load employee title info into state:
+            this.getEmployeeTitle(this.state.user_emp_no)
+                .then(res => {
+                    this.setState({
+                        user_title_info: res.employee_title
+                    });
+                })
+                .catch(err => {
+                    alert("error in getDepartment");
+                    console.log(err);
+                    alert(err);
+                });
+
+
+            // end employee info loading.
         }
         else {
             alert("ERROR: User emp_no was null.");
         }
 
+        // Finished authenticating user:
         this.setState({isAuthenticating: false});
 
     }
@@ -192,6 +214,15 @@ export default class UserDashboard extends Component {
 
     getEmployeeSalary = async (emp_no) => {
         const response = await fetch('employee-salary/' + emp_no); // Call API declared in app.js file.
+        const body = await response.json();
+
+        if (response.status !== 200) throw Error(body.message);
+        return body;
+    };
+
+
+    getEmployeeTitle = async (emp_no) => {
+        const response = await fetch('employee-title/' + emp_no); // Call API declared in app.js file.
         const body = await response.json();
 
         if (response.status !== 200) throw Error(body.message);
@@ -233,6 +264,17 @@ export default class UserDashboard extends Component {
                         <p>Loading Employee Data...</p>
                     }
 
+                    { // Show User's title info if not null: (using ternary operator: (bool)? TRUE : FALSE ):
+                        (this.state.user_title_info != null)?
+                            <div className="employee_info">
+                                <h3>{this.state.user_title_info.title}</h3>
+                                <p>since: {this.state.user_title_info.from_date}</p>
+                            </div>
+
+                            : // if is null:
+                            <p>Loading Employee Title Data...</p>
+                    }
+
                     { // Show User's department info if not null: (using ternary operator: (bool)? TRUE : FALSE ):
                         (this.state.user_department != null)?
                             <div className="employee_info">
@@ -254,6 +296,8 @@ export default class UserDashboard extends Component {
                             : // if is null:
                             <p>Loading Employee Salary Data...</p>
                     }
+
+
 
                 </div>
             </div>

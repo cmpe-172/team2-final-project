@@ -346,6 +346,52 @@ app.get('/employee-salary/:id', function(req, res, next) {
 
 
 
+// See UserDashboard.js for an example of how to use this GET api call:
+// SELECT * FROM titles WHERE emp_no = id ORDER BY to_date DESC;
+/*
+Example result:
++--------+--------------+------------+------------+
+| emp_no | title        | from_date  | to_date    |
++--------+--------------+------------+------------+
+|  10005 | Senior Staff | 1996-09-12 | 9999-01-01 | <-- We will only take most recent.
+|  10005 | Staff        | 1989-09-12 | 1996-09-12 |
++--------+--------------+------------+------------+
+ */
+// Returns the current (most recent) title info for the employee (given the employee's emp_no):
+app.get('/employee-title/:id', function(req, res, next) {
+
+    id = req.params.id; // id is emp_no.
+
+    var mysql = require('mysql');
+    var connection = mysql.createConnection({
+        host     : 'localhost',
+        user     : 'user172',
+        password : '123456',
+        database : 'employees'
+    });
+
+    var emp_no = id; //'10001';
+    connection.query('SELECT * FROM titles WHERE emp_no = ? ORDER BY to_date DESC;', [emp_no], function (error, rows, fields) {
+        if(error) {
+            //  res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+            //If there is error, we send the error in the error section with 500 status
+
+            console.log('ERROR: ' + error);
+
+            res.json({error: error});
+        } else {
+            // console.log('SUCCESS: result = ' + result);
+            console.log('The solution is: size = ' + rows.length);
+
+            console.log('The solution is: rows[0].title = ' + rows[0].title);
+            console.log('The solution is: rows[0].emp_no = ' + rows[0].emp_no);
+            console.log('The solution is: rows[0].from_date = ' + rows[0].from_date);
+
+            res.json({employee_title: rows[0]}); // send only the first row of the result.
+        }
+    });
+});
+
 
 app.get('/about', function (req, res) {
     res.send('about')
