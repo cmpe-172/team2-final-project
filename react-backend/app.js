@@ -148,7 +148,20 @@ app.get('/test1', function(req, res, next) {
 
 });
 
+/*
+    MySQL API GET calls:
+*/
 
+// See UserDashboard.js for an example of how to use this GET api call:
+// SQL: SELECT * FROM employees WHERE emp_no = id;
+/*
+Example result:
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
++--------+------------+------------+-----------+--------+------------+
+ */
 app.get('/employee/:id', function(req, res, next) {
 
     id = req.params.id;
@@ -169,7 +182,7 @@ app.get('/employee/:id', function(req, res, next) {
 
             console.log('ERROR: ' + error);
 
-            res.json({a: 'ERROR'}); // DEBUG ONLY
+            res.json({error: error});
         } else {
             // console.log('SUCCESS: result = ' + result);
             console.log('The solution is: size = ' + rows.length);// + result.first()); //rows[0].name);
@@ -177,16 +190,101 @@ app.get('/employee/:id', function(req, res, next) {
             console.log('The solution is: rows[0].first_name = ' + rows[0].first_name);// + result.first()); //rows[0].name);
             console.log('The solution is: rows[0].emp_no = ' + rows[0].emp_no);// + result.first()); //rows[0].name);
 
-
-
-            //  res.send(JSON.stringify({"status": 200, "error": null, "response": result}));
-            //If there is no error, all is good and response is 200OK.
-            // res.json({a: 'OK'}); // DEBUG ONLY
-            res.json({employee: rows[0]}); // DEBUG ONLY
+            res.json({employee: rows[0]}); // send only the first row of the result.
         }
     });
-
 });
+
+// See UserDashboard.js for an example of how to use this GET api call:
+// SQL: SELECT * FROM departments WHERE dept_no = id;
+/*
+Example result:
++---------+-----------+
+| dept_no | dept_name |
++---------+-----------+
+| d007    | Sales     |
++---------+-----------+
+ */
+app.get('/department/:id', function(req, res, next) {
+
+    id = req.params.id;
+
+    var mysql = require('mysql');
+    var connection = mysql.createConnection({
+        host     : 'localhost',
+        user     : 'user172',
+        password : '123456',
+        database : 'employees'
+    });
+
+    var dept_no = id; //'d007';
+    connection.query('SELECT * FROM departments WHERE dept_no = ?', [dept_no], function (error, rows, fields) {
+        if(error) {
+            //  res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+            //If there is error, we send the error in the error section with 500 status
+
+            console.log('ERROR: ' + error);
+
+            res.json({error: error});
+        } else {
+            // console.log('SUCCESS: result = ' + result);
+            console.log('The solution is: size = ' + rows.length);// + result.first()); //rows[0].name);
+
+            console.log('The solution is: rows[0].dept_name = ' + rows[0].dept_name);// + result.first()); //rows[0].name);
+            console.log('The solution is: rows[0].dept_no = ' + rows[0].dept_no);// + result.first()); //rows[0].name);
+
+            res.json({department: rows[0]}); // send only the first row of the result.
+        }
+    });
+});
+
+
+
+// See UserDashboard.js for an example of how to use this GET api call:
+// SELECT * FROM (departments d JOIN dept_emp de ON d.dept_no=de.dept_no) WHERE emp_no = id;
+/*
+Example Result:
++---------+-----------------+--------+---------+------------+------------+
+| dept_no | dept_name       | emp_no | dept_no | from_date  | to_date    |
++---------+-----------------+--------+---------+------------+------------+
+| d003    | Human Resources |  10005 | d003    | 1989-09-12 | 9999-01-01 |
++---------+-----------------+--------+---------+------------+------------+
+ */
+// Returns the department info for the employee (given the employee's emp_no):
+app.get('/employee-department/:id', function(req, res, next) {
+
+    id = req.params.id;
+
+    var mysql = require('mysql');
+    var connection = mysql.createConnection({
+        host     : 'localhost',
+        user     : 'user172',
+        password : '123456',
+        database : 'employees'
+    });
+
+    var emp_no = id; //'10001';
+    connection.query('SELECT * FROM (departments d JOIN dept_emp de ON d.dept_no=de.dept_no) WHERE emp_no = ?', [emp_no], function (error, rows, fields) {
+        if(error) {
+            //  res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+            //If there is error, we send the error in the error section with 500 status
+
+            console.log('ERROR: ' + error);
+
+            res.json({error: error});
+        } else {
+            // console.log('SUCCESS: result = ' + result);
+            console.log('The solution is: size = ' + rows.length);
+
+            console.log('The solution is: rows[0].dept_name = ' + rows[0].dept_name);
+            console.log('The solution is: rows[0].dept_no = ' + rows[0].dept_no);
+            console.log('The solution is: rows[0].emp_no = ' + rows[0].emp_no);
+
+            res.json({employee_department: rows[0]}); // send only the first row of the result.
+        }
+    });
+});
+
 
 app.get('/about', function (req, res) {
     res.send('about')

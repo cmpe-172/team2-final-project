@@ -14,7 +14,8 @@ export default class UserDashboard extends Component {
 
         this.state = {
             isLoading: false,
-            user_employee: null
+            user_employee: null,
+            user_department: null
         };
     }
 
@@ -42,7 +43,9 @@ export default class UserDashboard extends Component {
         //     });
 
 
-        this.getEmployee('10004')
+        var emp_no = '10004';
+
+        this.getEmployee(emp_no)
             .then(res => {
                 // alert("success in callGetEmployeeApi");
 
@@ -61,28 +64,91 @@ export default class UserDashboard extends Component {
                 });
             })
             .catch(err => {
-                alert("error in callGetEmployeeApi");
+                alert("error in getEmployee");
                 console.log(err);
                 alert(err);
             });
+
+
+
+
+        // this.getDepartment('d007')
+        //     .then(res => {
+        //         // alert("success in callGetEmployeeApi");
+        //
+        //         //console.log(res);
+        //         //alert(res);
+        //
+        //         // alert('status: ' + res.status);
+        //
+        //         alert('res.department = ' + res.department);
+        //         alert('res.department.dept_no = ' + res.department.dept_no); // access variables in the JSON response.
+        //         alert('res.department.dept_name = ' + res.department.dept_name);
+        //
+        //         // Set this in the state so can use in view (in 'render' function):
+        //         // TODO:
+        //         // this.setState({
+        //         //     user_employee: res.employee
+        //         // });
+        //     })
+        //     .catch(err => {
+        //         alert("error in getDepartment");
+        //         console.log(err);
+        //         alert(err);
+        //     });
+
+
+        this.getEmployeeDepartment(emp_no)
+            .then(res => {
+                // alert("success in callGetEmployeeApi");
+
+                //console.log(res);
+                //alert(res);
+
+                // alert('status: ' + res.status);
+
+                // alert('res.employee_department = ' + res.employee_department);
+                // alert('res.employee_department.dept_no = ' + res.employee_department.dept_no); // access variables in the JSON response.
+                // alert('res.employee_department.dept_name = ' + res.employee_department.dept_name);
+                // alert('res.employee_department.emp_no = ' + res.employee_department.emp_no);
+
+                // Set this in the state so can use in view (in 'render' function):
+                this.setState({
+                    user_department: res.employee_department
+                });
+            })
+            .catch(err => {
+                alert("error in getDepartment");
+                console.log(err);
+                alert(err);
+            });
+
+
 
         this.setState({ isAuthenticating: false });
     }
 
 
     getEmployee = async (emp_no) => {
-        //const response = await fetch('test1');
+        const response = await fetch('employee/' + emp_no); // Call API declared in app.js file.
+        const body = await response.json();
 
-        //var emp_no = '10002';
+        if (response.status !== 200) throw Error(body.message);
+        return body;
+    };
 
-        const response = await fetch('employee/'+emp_no);
-        const body = await response.json();//body; //json();//.json();
 
+    getDepartment = async (dept_no) => {
+        const response = await fetch('department/' + dept_no); // Call API declared in app.js file.
+        const body = await response.json();
 
-        //alert(body);
-        //alert(response.body);
-        //console.log(response.toString());
-        //alert(response.status);
+        if (response.status !== 200) throw Error(body.message);
+        return body;
+    };
+
+    getEmployeeDepartment = async (emp_no) => {
+        const response = await fetch('employee-department/' + emp_no); // Call API declared in app.js file.
+        const body = await response.json();
 
         if (response.status !== 200) throw Error(body.message);
         return body;
@@ -110,15 +176,29 @@ export default class UserDashboard extends Component {
                 <div className="lander">
                     <h1>User's Dashboard</h1>
 
-                    {(this.state.user_employee != null)?
+
+                    { // Show User's employee info if not null: (using ternary operator: (bool)? TRUE : FALSE ):
+                        (this.state.user_employee != null)?
                         <div className="employee_info">
                             <h2>Hello, {this.state.user_employee.first_name} {this.state.user_employee.last_name}</h2>
-                            <p>Employee : {this.state.user_employee.emp_no}</p>
+                            <p>Employee # : {this.state.user_employee.emp_no}</p>
                             <p>Hire Date : {this.state.user_employee.hire_date}</p>
                         </div>
 
-                        :
+                        : // if is null:
                         <p>Loading Employee Data...</p>
+                    }
+
+                    { // Show User's department info if not null: (using ternary operator: (bool)? TRUE : FALSE ):
+                        (this.state.user_department != null)?
+                            <div className="employee_info">
+                                <h3>Department: {this.state.user_department.dept_name}</h3>
+                                <p>Department # : {this.state.user_department.dept_no}</p>
+                                <p>In Department since : {this.state.user_employee.from_date}</p>
+                            </div>
+
+                            : // if is null:
+                            <p>Loading Employee Department Data...</p>
                     }
 
                 </div>
