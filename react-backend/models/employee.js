@@ -12,6 +12,15 @@ module.exports = (sequelize, DataTypes) => {
     // User.associate = function(models) {
     //     models.User.hasMany(models.Task);
     // };
+// OR:
+    // Reservation.associate = function(models) {
+    //     Reservation.belongsTo(models.Hotel);
+    //     Reservation.hasOne(models.Payment,{ foreignKey: 'reservation_id' });
+    //     Reservation.belongsTo(models.user,{
+    //         foreignKey: 'user_id',
+    //         onDelete: 'CASCADE'
+    //     });
+    // };
 
     return Employee;
 };

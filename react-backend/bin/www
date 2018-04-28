@@ -8,19 +8,35 @@ var app = require('../app');
 var debug = require('debug')('react-backend:server');
 var http = require('http');
 
-var mysql      = require('mysql');
-var connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'user172',
-  password : '123456',
-  database : 'employees'
-});
+
+
+
+// // DB TESTING:
+//   var mysql = require('mysql');
+//   var connection = mysql.createConnection({
+//     host     : 'localhost',
+//     user     : 'user172',
+//     password : '123456',
+//     database : 'employees'
+//   });
+//
+//   connection.connect();
+//   // SELECT * FROM employees WHERE emp_no = 10556;
+//   var emp_no = 10556; // '10556';
+//   connection.query('SELECT * FROM employees WHERE emp_no = ?;', [emp_no], function (error, results, fields) {
+//     console.log('The results are: ', results);
+//     if (error) throw error;
+//     console.log('The first name is: ', results[0].first_name);
+//   });
+//
+//   connection.end();
+//   // END TESTING;
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3001');
+var port = normalizePort(process.env.PORT || '3001');//'3001');
 app.set('port', port);
 
 /**
@@ -29,13 +45,28 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+/// TEST:
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+// models.sequelize.sync().then(function() {
+//     /**
+//      * Listen on provided port, on all network interfaces.
+//      */
+//     server.listen(port, function() {
+//         debug('Express server listening on port ' + server.address().port);
+//     });
+//     server.on('error', onError);
+//     server.on('listening', onListening);
+// });
+
+////
+
+// /**
+//  * Listen on provided port, on all network interfaces.
+//  */
+//
+// server.listen(port);
+// server.on('error', onError);
+// server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.

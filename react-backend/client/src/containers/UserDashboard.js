@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import "./UserDashboard.css";
-import {Auth} from "aws-amplify/lib/index";
+// import {Auth} from "aws-amplify/lib/index";
 
 //import Employee from "../models/employee.js";
 
-// import db from "../models/index.js";
+// import Database from "../models/index.js";
+
 
 export default class UserDashboard extends Component {
 
@@ -13,42 +14,94 @@ export default class UserDashboard extends Component {
 
         this.state = {
             isLoading: false,
-            userFirstName: ""
+            user_employee: null
         };
     }
 
 
+
+
     async componentDidMount() {
 
-        // db.sequelize
-        //     .authenticate()
-        //     .then(() => {
-        //         console.log('Connection has been established successfully.');
+        // this.callHelloApi()
+        //     .then(res => {
+        //         alert("success in callHelloApi");
+        //         //console.log(res);
+        //         //alert(res);
+        //
+        //         alert('status = ' + res.status);
+        //         alert('response = ' + res.express); // access vaiables in the JSON response.
+        //         // this.setState({
+        //         //     json: res.map(x => x),
+        //         // })
         //     })
         //     .catch(err => {
-        //         console.error('Unable to connect to the database:', err);
+        //         alert("error in callHelloApi");
+        //         console.log(err);
+        //         alert(err);
         //     });
 
-        try {
-            // search for known ids
-            // 10001,Georgi,Facello,Georgi.Facello@team2-app172.com
-            //Employee.findById(10001).then(employee => {
 
-            // db.employee.findById(10001).then(employee => {
-            //     // employee will be an instance of Employee and stores the content of the table entry
-            //     // with id 123. if such an entry is not defined you will get null
-            //     console.log(employee);
-            //     // TODO: add employee to the state...
-            // })
-        }
-        catch(e) {
-            if (e !== 'No current user') {
-                alert(e);
-            }
-        }
+        this.getEmployee('10004')
+            .then(res => {
+                // alert("success in callGetEmployeeApi");
+
+                //console.log(res);
+                //alert(res);
+
+                // alert('status: ' + res.status);
+
+                // alert('res.employee = ' + res.employee);
+                // alert('res.employee.emp_no = ' + res.employee.emp_no); // access variables in the JSON response.
+                // alert('res.employee.first_name = ' + res.employee.first_name);
+
+                // Set this in the state so can use in view (in 'render' function):
+                this.setState({
+                    user_employee: res.employee
+                });
+            })
+            .catch(err => {
+                alert("error in callGetEmployeeApi");
+                console.log(err);
+                alert(err);
+            });
 
         this.setState({ isAuthenticating: false });
     }
+
+
+    getEmployee = async (emp_no) => {
+        //const response = await fetch('test1');
+
+        //var emp_no = '10002';
+
+        const response = await fetch('employee/'+emp_no);
+        const body = await response.json();//body; //json();//.json();
+
+
+        //alert(body);
+        //alert(response.body);
+        //console.log(response.toString());
+        //alert(response.status);
+
+        if (response.status !== 200) throw Error(body.message);
+        return body;
+    };
+
+
+
+    // This is a test method to show that can call GET API from app.js file:
+    callHelloApi = async () => {
+        const response = await fetch('/api/hello');//fetch('/fetchdata');
+        const body = await response.json();//body; //json();//.json();
+
+        if (response.status !== 200) throw Error(body.message);
+        return body;
+    };
+
+
+
+
 
 
     render() {
@@ -56,7 +109,18 @@ export default class UserDashboard extends Component {
             <div className="UserDashboard">
                 <div className="lander">
                     <h1>User's Dashboard</h1>
-                    <p>TODO: get user from DB into state.</p>
+
+                    {(this.state.user_employee != null)?
+                        <div className="employee_info">
+                            <h2>Hello, {this.state.user_employee.first_name} {this.state.user_employee.last_name}</h2>
+                            <p>Employee : {this.state.user_employee.emp_no}</p>
+                            <p>Hire Date : {this.state.user_employee.hire_date}</p>
+                        </div>
+
+                        :
+                        <p>Loading Employee Data...</p>
+                    }
+
                 </div>
             </div>
         );
