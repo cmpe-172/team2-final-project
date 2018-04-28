@@ -15,7 +15,8 @@ export default class UserDashboard extends Component {
         this.state = {
             isLoading: false,
             user_employee: null,
-            user_department: null
+            user_department: null,
+            user_salary: null
         };
     }
 
@@ -124,6 +125,32 @@ export default class UserDashboard extends Component {
             });
 
 
+        this.getEmployeeSalary(emp_no)
+            .then(res => {
+                // alert("success in callGetEmployeeApi");
+
+                //console.log(res);
+                //alert(res);
+
+                // alert('status: ' + res.status);
+
+                alert('res.employee_salary = ' + res.employee_salary);
+                alert('res.employee_salary.salary = ' + res.employee_salary.salary); // access variables in the JSON response.
+                // alert('res.employee_department.dept_name = ' + res.employee_department.dept_name);
+                // alert('res.employee_department.emp_no = ' + res.employee_department.emp_no);
+
+                // Set this in the state so can use in view (in 'render' function):
+                this.setState({
+                    user_salary: res.employee_salary
+                });
+            })
+            .catch(err => {
+                alert("error in getDepartment");
+                console.log(err);
+                alert(err);
+            });
+
+
 
         this.setState({ isAuthenticating: false });
     }
@@ -148,6 +175,15 @@ export default class UserDashboard extends Component {
 
     getEmployeeDepartment = async (emp_no) => {
         const response = await fetch('employee-department/' + emp_no); // Call API declared in app.js file.
+        const body = await response.json();
+
+        if (response.status !== 200) throw Error(body.message);
+        return body;
+    };
+
+
+    getEmployeeSalary = async (emp_no) => {
+        const response = await fetch('employee-salary/' + emp_no); // Call API declared in app.js file.
         const body = await response.json();
 
         if (response.status !== 200) throw Error(body.message);
@@ -194,11 +230,21 @@ export default class UserDashboard extends Component {
                             <div className="employee_info">
                                 <h3>Department: {this.state.user_department.dept_name}</h3>
                                 <p>Department # : {this.state.user_department.dept_no}</p>
-                                <p>In Department since : {this.state.user_employee.from_date}</p>
+                                <p>In Department since : {this.state.user_department.from_date}</p>
                             </div>
 
                             : // if is null:
                             <p>Loading Employee Department Data...</p>
+                    }
+
+                    { // Show User's salary info if not null: (using ternary operator: (bool)? TRUE : FALSE ):
+                        (this.state.user_salary != null)?
+                            <div className="employee_info">
+                                <h4>Current salary: ${this.state.user_salary.salary}</h4>
+                            </div>
+
+                            : // if is null:
+                            <p>Loading Employee Salary Data...</p>
                     }
 
                 </div>

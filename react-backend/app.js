@@ -164,7 +164,7 @@ Example result:
  */
 app.get('/employee/:id', function(req, res, next) {
 
-    id = req.params.id;
+    id = req.params.id; // id is emp_no.
 
     var mysql = require('mysql');
     var connection = mysql.createConnection({
@@ -207,7 +207,7 @@ Example result:
  */
 app.get('/department/:id', function(req, res, next) {
 
-    id = req.params.id;
+    id = req.params.id; // id is dept_no.
 
     var mysql = require('mysql');
     var connection = mysql.createConnection({
@@ -253,7 +253,7 @@ Example Result:
 // Returns the department info for the employee (given the employee's emp_no):
 app.get('/employee-department/:id', function(req, res, next) {
 
-    id = req.params.id;
+    id = req.params.id; // id is emp_no.
 
     var mysql = require('mysql');
     var connection = mysql.createConnection({
@@ -284,6 +284,67 @@ app.get('/employee-department/:id', function(req, res, next) {
         }
     });
 });
+
+// See UserDashboard.js for an example of how to use this GET api call:
+// SELECT * FROM salaries WHERE emp_no = id ORDER BY to_date DESC;
+/*
+Example result:
++--------+--------+------------+------------+
+| emp_no | salary | from_date  | to_date    |
++--------+--------+------------+------------+
+|  10004 |  74057 | 2001-11-27 | 9999-01-01 | <-- We will only take most recent.
+|  10004 |  70698 | 2000-11-27 | 2001-11-27 |
+|  10004 |  69722 | 1999-11-28 | 2000-11-27 |
+|  10004 |  67096 | 1998-11-28 | 1999-11-28 |
+|  10004 |  64340 | 1997-11-28 | 1998-11-28 |
+|  10004 |  62566 | 1996-11-28 | 1997-11-28 |
+|  10004 |  60770 | 1995-11-29 | 1996-11-28 |
+|  10004 |  58326 | 1994-11-29 | 1995-11-29 |
+|  10004 |  54693 | 1993-11-29 | 1994-11-29 |
+|  10004 |  52119 | 1992-11-29 | 1993-11-29 |
+|  10004 |  50594 | 1991-11-30 | 1992-11-29 |
+|  10004 |  48271 | 1990-11-30 | 1991-11-30 |
+|  10004 |  46065 | 1989-11-30 | 1990-11-30 |
+|  10004 |  42542 | 1988-11-30 | 1989-11-30 |
+|  10004 |  42283 | 1987-12-01 | 1988-11-30 |
+|  10004 |  40054 | 1986-12-01 | 1987-12-01 |
++--------+--------+------------+------------+
+ */
+// Returns the current (most recent) salary info for the employee (given the employee's emp_no):
+app.get('/employee-salary/:id', function(req, res, next) {
+
+    id = req.params.id; // id is emp_no.
+
+    var mysql = require('mysql');
+    var connection = mysql.createConnection({
+        host     : 'localhost',
+        user     : 'user172',
+        password : '123456',
+        database : 'employees'
+    });
+
+    var emp_no = id; //'10001';
+    connection.query('SELECT * FROM salaries WHERE emp_no = ? ORDER BY to_date DESC', [emp_no], function (error, rows, fields) {
+        if(error) {
+            //  res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+            //If there is error, we send the error in the error section with 500 status
+
+            console.log('ERROR: ' + error);
+
+            res.json({error: error});
+        } else {
+            // console.log('SUCCESS: result = ' + result);
+            console.log('The solution is: size = ' + rows.length);
+
+            console.log('The solution is: rows[0].salary = ' + rows[0].salary);
+            console.log('The solution is: rows[0].emp_no = ' + rows[0].emp_no);
+
+            res.json({employee_salary: rows[0]}); // send only the first row of the result.
+        }
+    });
+});
+
+
 
 
 app.get('/about', function (req, res) {
