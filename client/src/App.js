@@ -84,7 +84,15 @@ class App extends Component {
 
                             { /* Only show Login/Signup if user is not already logged in: */ }
                             {this.state.isAuthenticated
-                                ? <NavItem onClick={this.handleLogout}>Logout</NavItem>
+                                ? <Fragment>
+                                    <LinkContainer to="/employees">
+                                        <NavItem>Employees</NavItem>
+                                    </LinkContainer>
+                                    <LinkContainer to="/dashboard">
+                                        <NavItem>Dashboard</NavItem>
+                                    </LinkContainer>
+                                    <NavItem onClick={this.handleLogout}>Logout</NavItem>
+                                </Fragment>
                                 : <Fragment>
                                     {/*<LinkContainer to="/signup">*/}
                                         {/*<NavItem>Signup</NavItem>*/}

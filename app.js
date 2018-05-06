@@ -152,6 +152,77 @@ app.get('/test1', function(req, res, next) {
     MySQL API GET calls:
 */
 
+
+// See UserDashboard.js for an example of how to use this GET api call:
+// SQL: SELECT * FROM employees WHERE emp_no = id;
+/*
+Example results: (list of employees)
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
++--------+------------+------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
++--------+------------+------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
++--------+------------+------------+-----------+--------+------------+
+...
++---------+-----------+--------+---------+------------+------------+--------+------------+------------+-----------+--------+------------+
+| dept_no | dept_name | emp_no | dept_no | from_date  | to_date    | emp_no | birth_date | first_name | last_name | gender | hire_date  |
++---------+-----------+--------+---------+------------+------------+--------+------------+------------+-----------+--------+------------+
+| d007    | Sales     |  10002 | d007    | 1996-08-03 | 9999-01-01 |  10002 | 1964-06-02 | Bezalel    | Simmel    | F      | 1985-11-21 |
++---------+-----------+--------+---------+------------+------------+--------+------------+------------+-----------+--------+------------+
+
+ */
+app.get('/employees/:id', function(req, res, next) {
+
+    id = req.params.id; // id is part of emp_no, first_name, or last_name.
+
+    var mysql = require('mysql');
+    var connection = mysql.createConnection({
+        host     : 'localhost',
+        user     : 'user172',
+        password : '123456',
+        database : 'employees'
+    });
+
+    var emp_no = id; //'10001';
+    connection.query('SELECT * ' +
+        'FROM (departments Dep ' +
+        'JOIN dept_emp DE ON Dep.dept_no=DE.dept_no ' +
+        'JOIN employees Emp ON DE.emp_no=Emp.emp_no)' +
+        ' WHERE Emp.first_name LIKE ? ' +
+        'OR Emp.last_name LIKE ? ' +
+        'OR Emp.emp_no LIKE ?',
+                        ['%' + emp_no + '%', '%' + emp_no + '%', '%' + emp_no + '%'], function (error, rows, fields) {
+        if(error) {
+            //  res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+            //If there is error, we send the error in the error section with 500 status
+
+            console.log('ERROR: ' + error);
+
+            res.json({error: error});
+        } else {
+
+            if (rows.length === 0) { // If SQL query has no results:
+                res.json({sql_error: "No results found."});
+            }
+            else {
+                // console.log('SUCCESS: result = ' + result);
+                console.log('The solution is: size = ' + rows.length);// + result.first()); //rows[0].name);
+
+                console.log('The solution is: rows[0].first_name = ' + rows[0].first_name);// + result.first()); //rows[0].name);
+                console.log('The solution is: rows[0].emp_no = ' + rows[0].emp_no);// + result.first()); //rows[0].name);
+
+                res.json({employees: rows}); // send only the first row of the result.
+            }
+
+
+        }
+    });
+});
+
+
 // See UserDashboard.js for an example of how to use this GET api call:
 // SQL: SELECT * FROM employees WHERE emp_no = id;
 /*
@@ -194,6 +265,9 @@ app.get('/employee/:id', function(req, res, next) {
         }
     });
 });
+
+
+
 
 // See UserDashboard.js for an example of how to use this GET api call:
 // SQL: SELECT * FROM departments WHERE dept_no = id;

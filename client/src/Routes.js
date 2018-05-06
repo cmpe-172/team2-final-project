@@ -7,12 +7,14 @@ import Login from "./containers/Login";
 import UserDashboard from "./containers/UserDashboard";
 
 import AppliedRoute from "./components/AppliedRoute";
+import EmployeeSearch from "./containers/EmployeeSearch";
 
 export default ({ childProps }) =>
     <Switch>
         <AppliedRoute path="/" exact component={Home} props={childProps} />
         <AppliedRoute path="/login" exact component={Login} props={childProps} />
         <AppliedRoute path="/dashboard" exact component={UserDashboard} props={childProps} />
+        <AppliedRoute path="/employees" exact component={EmployeeSearch} props={childProps} />
         { /* Finally, catch all unmatched routes */ }
         <Route component={NotFound} />
     </Switch>;
