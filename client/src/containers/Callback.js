@@ -23,40 +23,19 @@ class Callback extends Component {
 
         //alert('Reached componentDidMount of Callback. About to do: auth0.handleAuthentication()...');
 
-        var outerThis = this;
-
-        function onCompleteCallback () {
-            alert('now calling onCompleteCallback!');
-
+        auth0.handleAuthentication(() => {
+            // because we are using an "arrow function" the 'this' will mean Callback and not the inner function's 'this'.
             if (auth0.isAuthenticated()) {
-                outerThis.state.isLoading = false;
-                alert('setting isLoading to false.');
+                this.state.isLoading = false;
+                //alert('setting isLoading to false.');
 
                 // Set the user as Authenticated (for saving user's Login Session):
-                outerThis.props.userHasAuthenticated(true); // alert("Logged in");
+                this.props.userHasAuthenticated(true); // alert("Logged in");
 
                 // Redirect to Dashboard after user logs in with Auth0:
-                outerThis.props.history.push("/dashboard");
+                this.props.history.push("/dashboard");
             }
-
-        }
-
-        await auth0.handleAuthentication(onCompleteCallback);
-
-        alert('In Callback.js, Just finished doing: auth0.handleAuthentication()...');
-
-        alert('Callback: auth0.isAuthenticated() = ' + auth0.isAuthenticated());
-
-        // if (auth0.isAuthenticated()) {
-        //     this.state.isLoading = false;
-        //     alert('setting isLoading to false.');
-        //
-        //     // Set the user as Authenticated (for saving user's Login Session):
-        //     this.props.userHasAuthenticated(true); // alert("Logged in");
-        //
-        //     // Redirect to Dashboard after user logs in with Auth0:
-        //     this.props.history.push("/dashboard");
-        // }
+        })
 
     }
 

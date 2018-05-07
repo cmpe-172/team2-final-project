@@ -27,14 +27,14 @@ export default class Auth0 {
     // Auth0: handle authentication:
     async handleAuthentication(onCompleCallback) {
 
-        alert('in Auth0.handleAuthentication()...');
+        //alert('in Auth0.handleAuthentication()...');
 
 
         //this.auth0.parseHash((err, authResult) => {
         await this.auth0.parseHash({ hash: window.location.hash }, (err, authResult) => {
             if (authResult && authResult.accessToken && authResult.idToken) {
 
-                alert('SUCCESS: LoginOther:handleAuthentication: ' + authResult);
+                //alert('SUCCESS: LoginOther:handleAuthentication: ' + authResult);
 
                 this.setSession(authResult, onCompleCallback);
                 // Redirect to User's Dashboard after user successfully logs in:
@@ -58,7 +58,7 @@ export default class Auth0 {
 
         // TODO: set to this.state...???
 
-        alert('in auth0.setSession: accessToken=[' + authResult.accessToken + ']; idToken=[' + authResult.idToken + ']; expiresAt=[' + expiresAt + ']');
+        // alert('in auth0.setSession: accessToken=[' + authResult.accessToken + ']; idToken=[' + authResult.idToken + ']; expiresAt=[' + expiresAt + ']');
 
         localStorage.setItem('access_token', authResult.accessToken);
         localStorage.setItem('id_token', authResult.idToken);
@@ -77,10 +77,10 @@ export default class Auth0 {
         // Access Token's expiry time
         let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
 
-        alert('in auth0.isAuthenticated: expiresAt = ' + expiresAt);
+        //alert('in auth0.isAuthenticated: expiresAt = ' + expiresAt);
 
-        let currTime = new Date().getTime();
-        alert(' AND (Date().getTime() < expiresAt) returns(T=auth):' + (currTime < expiresAt));
+        //let currTime = new Date().getTime();
+        //alert(' AND (Date().getTime() < expiresAt) returns(T=auth):' + (currTime < expiresAt));
 
         return (new Date().getTime() < expiresAt);
     }
