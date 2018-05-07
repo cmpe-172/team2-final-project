@@ -74,8 +74,8 @@ class App extends Component {
             auth0.logout();
         }
 
-        // Redirect to Login Page after user logs out:
-        this.props.history.push("/login");
+        // Redirect to Home Page after user logs out:
+        this.props.history.push("/");
     }
 
 
@@ -127,12 +127,8 @@ class App extends Component {
                                     {/*<LinkContainer to="/signup">*/}
                                         {/*<NavItem>Signup</NavItem>*/}
                                     {/*</LinkContainer>*/}
-                                    <LinkContainer to="/login">
-                                        <NavItem>Login</NavItem>
-                                    </LinkContainer>
-
                                     <LinkContainer to="/loginAuth0">
-                                        <NavItem>LoginAuth0</NavItem>
+                                        <NavItem>Login</NavItem>
                                     </LinkContainer>
 
                                 </Fragment>

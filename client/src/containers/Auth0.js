@@ -25,7 +25,7 @@ export default class Auth0 {
 
 
     // Auth0: handle authentication:
-    async handleAuthentication(onCompleCallback) {
+    async handleAuthentication(onCompleteCallback) {
 
         //alert('in Auth0.handleAuthentication()...');
 
@@ -36,7 +36,7 @@ export default class Auth0 {
 
                 //alert('SUCCESS: LoginOther:handleAuthentication: ' + authResult);
 
-                this.setSession(authResult, onCompleCallback);
+                this.setSession(authResult, onCompleteCallback);
                 // Redirect to User's Dashboard after user successfully logs in:
                 // TODO: this.props.history.push("/dashboard");
             } else if (err) {
@@ -51,7 +51,7 @@ export default class Auth0 {
     }
 
     // Auth0: set session:
-    setSession(authResult, onCompleCallback) {
+    setSession(authResult, onCompleteCallback) {
         //alert('in Auth0.setSession(...)...');
         // Set the time that the Access Token will expire at
         let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
@@ -65,7 +65,7 @@ export default class Auth0 {
         localStorage.setItem('expires_at', expiresAt);
         // navigate to the home route
         // TODO // history.replace('/home');
-        onCompleCallback(); // When done, perform some action specified by the caller.
+        onCompleteCallback(); // When done, perform some action specified by the caller.
     }
 
 
