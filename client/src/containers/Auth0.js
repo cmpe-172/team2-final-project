@@ -25,17 +25,18 @@ export default class Auth0 {
 
 
     // Auth0: handle authentication:
-    handleAuthentication() {
+    async handleAuthentication(onCompleCallback) {
 
         alert('in Auth0.handleAuthentication()...');
 
-        // this.auth0.parseHash({ hash: window.location.hash }, (err, authResult) => {
-        this.auth0.parseHash((err, authResult) => {
+
+        //this.auth0.parseHash((err, authResult) => {
+        await this.auth0.parseHash({ hash: window.location.hash }, (err, authResult) => {
             if (authResult && authResult.accessToken && authResult.idToken) {
 
                 alert('SUCCESS: LoginOther:handleAuthentication: ' + authResult);
 
-                this.setSession(authResult);
+                this.setSession(authResult, onCompleCallback);
                 // Redirect to User's Dashboard after user successfully logs in:
                 // TODO: this.props.history.push("/dashboard");
             } else if (err) {
@@ -45,23 +46,29 @@ export default class Auth0 {
                 console.log(err);
             }
 
-            alert('err = ' + err);
+            //alert('err = ' + err);
         });
     }
 
     // Auth0: set session:
-    setSession(authResult) {
-        alert('in Auth0.setSession(...)...');
+    setSession(authResult, onCompleCallback) {
+        //alert('in Auth0.setSession(...)...');
         // Set the time that the Access Token will expire at
         let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
 
         // TODO: set to this.state...???
+
+        alert('in auth0.setSession: accessToken=[' + authResult.accessToken + ']; idToken=[' + authResult.idToken + ']; expiresAt=[' + expiresAt + ']');
+
         localStorage.setItem('access_token', authResult.accessToken);
         localStorage.setItem('id_token', authResult.idToken);
         localStorage.setItem('expires_at', expiresAt);
         // navigate to the home route
         // TODO // history.replace('/home');
+        onCompleCallback();
     }
+
+
 
 
     // Auth0: check is authenticated:
@@ -69,7 +76,13 @@ export default class Auth0 {
         // Check whether the current time is past the
         // Access Token's expiry time
         let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-        return new Date().getTime() < expiresAt;
+
+        alert('in auth0.isAuthenticated: expiresAt = ' + expiresAt);
+
+        let currTime = new Date().getTime();
+        alert(' AND (Date().getTime() < expiresAt) returns(T=auth):' + (currTime < expiresAt));
+
+        return (new Date().getTime() < expiresAt);
     }
 
     logout() {

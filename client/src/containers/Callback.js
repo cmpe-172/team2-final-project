@@ -21,17 +21,42 @@ class Callback extends Component {
 
         const auth0 = new Auth0();
 
-        alert('Reached componentDidMount of Callback. About to do: auth0.handleAuthentication()...');
+        //alert('Reached componentDidMount of Callback. About to do: auth0.handleAuthentication()...');
 
-        auth0.handleAuthentication(); // TODO: check is working...
+        var outerThis = this;
+
+        function onCompleteCallback () {
+            alert('now calling onCompleteCallback!');
+
+            if (auth0.isAuthenticated()) {
+                outerThis.state.isLoading = false;
+                alert('setting isLoading to false.');
+
+                // Set the user as Authenticated (for saving user's Login Session):
+                outerThis.props.userHasAuthenticated(true); // alert("Logged in");
+
+                // Redirect to Dashboard after user logs in with Auth0:
+                outerThis.props.history.push("/dashboard");
+            }
+
+        }
+
+        await auth0.handleAuthentication(onCompleteCallback);
 
         alert('In Callback.js, Just finished doing: auth0.handleAuthentication()...');
 
-        alert('auth0.isAuthenticated() = ' + auth0.isAuthenticated());
+        alert('Callback: auth0.isAuthenticated() = ' + auth0.isAuthenticated());
 
-        if (auth0.isAuthenticated()) {
-            this.state.isLoading = false;
-        }
+        // if (auth0.isAuthenticated()) {
+        //     this.state.isLoading = false;
+        //     alert('setting isLoading to false.');
+        //
+        //     // Set the user as Authenticated (for saving user's Login Session):
+        //     this.props.userHasAuthenticated(true); // alert("Logged in");
+        //
+        //     // Redirect to Dashboard after user logs in with Auth0:
+        //     this.props.history.push("/dashboard");
+        // }
 
     }
 
@@ -43,11 +68,11 @@ class Callback extends Component {
             justifyContent: 'center',
             height: '100vh',
             width: '100vw',
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: 'white',
+            // top: 0,
+            // bottom: 0,
+            // left: 0,
+            // right: 0,
+            // backgroundColor: 'white',
         }
 
         return (
@@ -58,8 +83,8 @@ class Callback extends Component {
                     (this.state.isLoading)?
                         // Show loading spinner:
                         <div style={style}>
-
                             <img src={loading} alt="loading"/>
+                            <p>Authenticating...</p>
                         </div>
 
                         : // if done loading:

@@ -9,7 +9,7 @@ import Routes from "./Routes";
 
 import { Auth } from "aws-amplify";
 
-// import Auth0 from './containers/LoginOther';
+import Auth0 from './containers/Auth0';
 
 
 
@@ -54,9 +54,18 @@ class App extends Component {
     }
 
     handleLogout = async event => {
+
+        // Logout of AWS Cognito:
         await Auth.signOut();
 
+        // Set user as logged out in state:
         this.userHasAuthenticated(false);
+
+        // Logout of Auth0 session:
+        const auth0 = new Auth0();
+        if (auth0.isAuthenticated()) {
+            auth0.logout();
+        }
 
         // Redirect to Login Page after user logs out:
         this.props.history.push("/login");

@@ -73,15 +73,11 @@ export default class LoginOther extends Component {
 
             await this.setState({ auth0: auth0 });
 
-            this.state.auth0.login(); // TODO...???
+            auth0.login(); // this.state.auth0.login();
 
-             // this.handleAuthentication();
-
-            // auth0.handleAuthentication();
-
-
-            alert('Auth0 authenticated: ' + auth0.isAuthenticated());
-            // TODO alert('Auth0 authenticated: ' + this.isAuthenticated());
+            // Now will go through Auth0.
+            // When done, will be automatically redirected to /callback
+            // Check Callback.js for auth0.handleAuthentication() and auth0.isAuthenticated()
 
             // await Auth.signIn(this.state.username, this.state.password);
             //
