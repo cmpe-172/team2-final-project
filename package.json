@@ -9,6 +9,7 @@
     "dev": "concurrently --kill-others-on-fail \"yarn server PORT=3001\" \"yarn client\""
   },
   "dependencies": {
+    "auth0-js": "^9.5.1",
     "aws-amplify": "^0.3.0",
     "concurrently": "^3.5.1",
     "cookie-parser": "~1.4.3",

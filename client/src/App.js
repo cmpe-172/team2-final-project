@@ -9,6 +9,9 @@ import Routes from "./Routes";
 
 import { Auth } from "aws-amplify";
 
+// import Auth0 from './containers/LoginOther';
+
+
 
 
 
@@ -60,6 +63,13 @@ class App extends Component {
     }
 
 
+    // testAuth0Login = async event => {
+    //
+    //     const auth0 = new Auth0();
+    //     auth0.login();
+    // }
+
+
 
     render() {
         const childProps = {
@@ -85,13 +95,17 @@ class App extends Component {
                             { /* Only show Login/Signup if user is not already logged in: */ }
                             {this.state.isAuthenticated
                                 ? <Fragment>
+
                                     <LinkContainer to="/employees">
                                         <NavItem>Employees</NavItem>
                                     </LinkContainer>
+
                                     <LinkContainer to="/dashboard">
                                         <NavItem>Dashboard</NavItem>
                                     </LinkContainer>
+
                                     <NavItem onClick={this.handleLogout}>Logout</NavItem>
+
                                 </Fragment>
                                 : <Fragment>
                                     {/*<LinkContainer to="/signup">*/}
@@ -100,6 +114,11 @@ class App extends Component {
                                     <LinkContainer to="/login">
                                         <NavItem>Login</NavItem>
                                     </LinkContainer>
+
+                                    <LinkContainer to="/loginAuth0">
+                                        <NavItem>LoginAuth0</NavItem>
+                                    </LinkContainer>
+
                                 </Fragment>
                             }
 
