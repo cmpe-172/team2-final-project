@@ -9,7 +9,7 @@ export default class Auth0 {
         redirectUri: 'http://localhost:3000/callback',
         audience: 'https://app-172.auth0.com/userinfo',
         responseType: 'token id_token',
-        scope: 'openid'
+        scope: 'openid profile email' // scope: 'openid'
     });
 
     // constructor() {
@@ -65,10 +65,13 @@ export default class Auth0 {
         localStorage.setItem('expires_at', expiresAt);
         // navigate to the home route
         // TODO // history.replace('/home');
-        onCompleCallback();
+        onCompleCallback(); // When done, perform some action specified by the caller.
     }
 
 
+    getAccessToken() {
+        return localStorage.getItem('access_token');
+    }
 
 
     // Auth0: check is authenticated:
@@ -84,6 +87,8 @@ export default class Auth0 {
 
         return (new Date().getTime() < expiresAt);
     }
+
+
 
     logout() {
         // Clear Access Token and ID Token from local storage

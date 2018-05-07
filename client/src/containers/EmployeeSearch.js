@@ -82,7 +82,7 @@ export default class EmployeeSearch extends Component {
             <div className="EmployeeSearch">
                 <form onSubmit={this.handleSubmit}>
                     <FormGroup controlId="employeeSearchField" bsSize="large">
-                        <ControlLabel>Employee ID</ControlLabel>
+                        <ControlLabel>Enter Employee first name, last name, or employee number to Search.</ControlLabel>
                         <FormControl
                             autoFocus
                             type="employeeSearchField"
@@ -126,7 +126,7 @@ export default class EmployeeSearch extends Component {
                             </BootstrapTable>
 
                             : // if is null:
-                            <p>Enter Employee ID to Search.</p>
+                            <p></p>
                     }
                 </div>
 

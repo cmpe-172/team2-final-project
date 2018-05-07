@@ -31,8 +31,15 @@ class App extends Component {
 
     async componentDidMount() {
         try {
+            // Check if logged in through AWS Cognito user pool:
             if (await Auth.currentSession()) {
                 this.userHasAuthenticated(true);
+            }
+            else { // Check if logged in through Auth0:
+                const auth0 = new Auth0();
+                if (auth0.isAuthenticated()) {
+                    this.userHasAuthenticated(true);
+                }
             }
         }
         catch(e) {
