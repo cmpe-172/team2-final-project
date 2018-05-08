@@ -17,16 +17,11 @@ export default class LoginOther extends Component {
         };
     }
 
-
-
-
     async componentDidMount() {
 
         // Redirect to Auth0's Universal Login page:
 
         const auth0 = new Auth0();
-
-        await this.setState({ auth0: auth0 });
 
         auth0.login();
     }

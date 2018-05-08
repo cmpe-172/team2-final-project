@@ -5,19 +5,12 @@ import auth0 from 'auth0-js';
 export default class Auth0 {
     auth0 = new auth0.WebAuth({
         domain: 'app-172.auth0.com',
-        clientID: '9EMUrseARUcu3BFMd42y3rk9YQN3BM8R', // 'cEeDE83Z5l48PRGxc5BQGgdmbXO9YOLi',
+        clientID: '9EMUrseARUcu3BFMd42y3rk9YQN3BM8R', // 9EMUrseARUcu3BFMd42y3rk9YQN3BM8R // 'cEeDE83Z5l48PRGxc5BQGgdmbXO9YOLi',
         redirectUri: 'http://localhost:3000/callback',
         audience: 'https://app-172.auth0.com/userinfo',
         responseType: 'token id_token',
         scope: 'openid profile email' // scope: 'openid'
     });
-
-    // constructor() {
-    //     this.login = this.login.bind(this);
-    //     this.logout = this.logout.bind(this);
-    //     this.handleAuthentication = this.handleAuthentication.bind(this);
-    //     this.isAuthenticated = this.isAuthenticated.bind(this);
-    // }
 
     login() {
         this.auth0.authorize();
