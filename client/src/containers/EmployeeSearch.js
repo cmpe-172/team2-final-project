@@ -115,7 +115,9 @@ export default class EmployeeSearch extends Component {
                         {/*<p>Enter Employee ID to Search.</p>*/}
                 {/*}*/}
 
-                <div className="EmployeeSearch">
+                <br></br>
+
+                <div>
                     { // Show User's employee info if not null: (using ternary operator: (bool)? TRUE : FALSE ):
                         (this.state.employees != null)?
                             <BootstrapTable data={ this.state.employees } striped hover condensed>

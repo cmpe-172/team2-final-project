@@ -20,8 +20,8 @@ export default class Home extends Component {
                             </div>
                             : // if not logged in:
                             <div>
-                                <h1>Welcome to Team2</h1>
-                                <p>Login with your employee credentials</p>
+                                <h1>Welcome to Team2 Employee Lookup</h1>
+                                <p>Login with your credentials to search</p>
                             </div>
                     }
 
