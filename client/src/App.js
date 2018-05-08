@@ -1,150 +1,36 @@
-import React, { Component, Fragment } from "react";
-import { Link, withRouter } from "react-router-dom";
-import { Nav, Navbar, NavItem } from "react-bootstrap";
-import "./App.css";
-
-import { LinkContainer } from "react-router-bootstrap";
-
-import Routes from "./Routes";
-
-import { Auth } from "aws-amplify";
-
-import Auth0 from './containers/Auth0';
-
-
-
-
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import './App.css';
 
 class App extends Component {
 
+  state = {
+    users: []
+  }
 
-    constructor(props) {
-        super(props);
+  componentDidMount() {
+    fetch('/users')
+      .then(res => res.json()) // in order to get this express needs to running too. 
+      .then(users => this.setState({users})); // add user list to state object.
+  }
 
-        this.state = {
-            isAuthenticated: false,
-            isAuthenticating: true,
-            username: null
-        };
-    }
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h1 className="App-title">Welcome to React</h1>
+        </header>
 
-
-    async componentDidMount() {
-        try {
-            // Check if logged in through AWS Cognito user pool:
-            if (await Auth.currentSession()) {
-                this.userHasAuthenticated(true);
-            }
-            else { // Check if logged in through Auth0:
-                const auth0 = new Auth0();
-                if (auth0.isAuthenticated()) {
-                    this.userHasAuthenticated(true);
-                }
-            }
-        }
-        catch(e) {
-            if (e !== 'No current user') {
-                alert(e);
-            }
-        }
-
-        this.setState({ isAuthenticating: false });
-    }
-
-
-    userHasAuthenticated = authenticated => {
-        this.setState({ isAuthenticated: authenticated });
-    }
-
-    setCurrentUsername = usernameFromLogin => {
-        this.setState({ username: usernameFromLogin });
-    }
-
-    handleLogout = async event => {
-
-        // Logout of AWS Cognito:
-        await Auth.signOut();
-
-        // Set user as logged out in state:
-        this.userHasAuthenticated(false);
-
-        // Logout of Auth0 session:
-        const auth0 = new Auth0();
-        if (auth0.isAuthenticated()) {
-            auth0.logout();
-        }
-
-        // Redirect to Home Page after user logs out:
-        this.props.history.push("/");
-    }
-
-
-    // testAuth0Login = async event => {
-    //
-    //     const auth0 = new Auth0();
-    //     auth0.login();
-    // }
-
-
-
-    render() {
-        const childProps = {
-            isAuthenticated: this.state.isAuthenticated,
-            userHasAuthenticated: this.userHasAuthenticated,
-            setCurrentUsername: this.setCurrentUsername,
-            username: this.state.username
-        };
-
-        return (
-            !this.state.isAuthenticating &&
-            <div className="App container">
-                <Navbar fluid collapseOnSelect>
-                    <Navbar.Header>
-                        <Navbar.Brand>
-                            <Link to="/">Team2</Link>
-                        </Navbar.Brand>
-                        <Navbar.Toggle />
-                    </Navbar.Header>
-                    <Navbar.Collapse>
-                        <Nav pullRight>
-
-                            { /* Only show Login/Signup if user is not already logged in: */ }
-                            {this.state.isAuthenticated
-                                ? <Fragment>
-
-                                    <LinkContainer to="/employees">
-                                        <NavItem>Employees</NavItem>
-                                    </LinkContainer>
-
-                                    <LinkContainer to="/dashboard">
-                                        <NavItem>Dashboard</NavItem>
-                                    </LinkContainer>
-
-                                    <NavItem onClick={this.handleLogout}>Logout</NavItem>
-
-                                </Fragment>
-                                : <Fragment>
-                                    {/*<LinkContainer to="/signup">*/}
-                                        {/*<NavItem>Signup</NavItem>*/}
-                                    {/*</LinkContainer>*/}
-                                    <LinkContainer to="/loginAuth0">
-                                        <NavItem>Login</NavItem>
-                                    </LinkContainer>
-
-                                </Fragment>
-                            }
-
-                        </Nav>
-                    </Navbar.Collapse>
-                </Navbar>
-
-                <Routes childProps={childProps} />
-            </div>
-        );
-    }
-
-
-
+        <h1> Users: </h1>
+        <ul>
+          {this.state.users.map(user =>
+            <li key={user.id}> {user.username} </li>
+          )}
+        </ul>
+      </div>
+    );
+  }
 }
 
-export default withRouter(App);
+export default App;
