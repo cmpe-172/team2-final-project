@@ -47,7 +47,7 @@ export default class Auth0 {
     setSession(authResult, onCompleteCallback) {
         //alert('in Auth0.setSession(...)...');
         // Set the time that the Access Token will expire at
-        let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
+        let expiresAt = JSON.stringify((authResult.expiresIn * 10000) + new Date().getTime());
 
         // TODO: set to this.state...???
 

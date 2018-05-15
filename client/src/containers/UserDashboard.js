@@ -62,29 +62,50 @@ export default class UserDashboard extends Component {
         return (
             <div className="UserDashboard">
                 <div className="lander">
-                    <h1>User's Dashboard</h1>
+                    <h3>User's Dashboard</h3>
 
 
                     { // Show User's employee info if not null: (using ternary operator: (bool)? TRUE : FALSE ):
                         (this.state.user_profile)?
                         <div className="user_info">
-                            { (this.state.user_profile.name) ?
-                                <h2>Hello, {this.state.user_profile.name}</h2>
-                                :
-                                <h2>Hello</h2>
-                            }
 
-                            { (this.state.user_profile.email) ?
-                                <h4>Email address: {this.state.user_profile.email}</h4>
-                                :
-                                <h4>No email for this user.</h4>
-                            }
+                            <div class="list-group">
+                                <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h2 class="mb-1">Hello, {this.state.user_profile.name}</h2>
+                                    </div>
+                                </a>
 
-                            { (this.state.user_profile.nickname) ?
-                                <h4>Nickname: {this.state.user_profile.nickname}</h4>
-                                :
-                                <h4>No nickname for this user.</h4>
-                            }
+                                { (this.state.user_profile.email) ?
+                                    <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h4 class="mb-1">Email address: {this.state.user_profile.email}</h4>
+                                        </div>
+                                    </a>
+                                    :
+                                    <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h4 class="mb-1">No email for this user.</h4>
+                                        </div>
+                                    </a>
+                                }
+
+                                { (this.state.user_profile.nickname) ?
+                                    <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h4 class="mb-1">Nickname: {this.state.user_profile.nickname}</h4>
+                                        </div>
+                                    </a>
+                                    :
+                                    <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h4 class="mb-1">No nickname for this user.</h4>
+                                        </div>
+                                    </a>
+                                }
+
+                            </div>
+
                             <p>Choose Employees to search.</p>
                         </div>
 

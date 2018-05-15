@@ -24,7 +24,8 @@ class App extends Component {
         this.state = {
             isAuthenticated: false,
             isAuthenticating: true,
-            username: null
+            username: null,
+            selectedEmployee: null
         };
     }
 
@@ -51,13 +52,19 @@ class App extends Component {
         this.setState({ isAuthenticating: false });
     }
 
-
+    // NOTE: exported (below) in render.childProps:
     userHasAuthenticated = authenticated => {
         this.setState({ isAuthenticated: authenticated });
     }
 
+    // NOTE: exported (below) in render.childProps:
     setCurrentUsername = usernameFromLogin => {
         this.setState({ username: usernameFromLogin });
+    }
+
+    // NOTE: exported (below) in render.childProps:
+    setSelectedEmployee = emp_no => {
+        this.setState({ selectedEmployee: emp_no });
     }
 
     handleLogout = async event => {
@@ -92,7 +99,9 @@ class App extends Component {
             isAuthenticated: this.state.isAuthenticated,
             userHasAuthenticated: this.userHasAuthenticated,
             setCurrentUsername: this.setCurrentUsername,
-            username: this.state.username
+            username: this.state.username,
+            setSelectedEmployee: this.setSelectedEmployee,
+            selectedEmployee: this.state.selectedEmployee
         };
 
         return (

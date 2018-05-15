@@ -50,7 +50,7 @@ export default class EmployeeDetail extends Component {
         // alert('this.props.username = ' + this.props.username);
 
 
-        var emp_no = this.props.username; // "10005"; // TODO: get Selected Employee...
+        var emp_no = this.props.selectedEmployee; // "10005"; // TODO: get Selected Employee...
         // NOTE: setState is async, so must use 'await' or .then:
         await this.setState({
             user_emp_no: emp_no
@@ -178,7 +178,7 @@ export default class EmployeeDetail extends Component {
             // end employee info loading.
         }
         else {
-            alert("ERROR: User emp_no was null.");
+            alert("ERROR: Employee Number sent was null.");
         }
 
         // Finished authenticating user:
@@ -242,20 +242,11 @@ export default class EmployeeDetail extends Component {
 
 
 
-
-
-
-    render() {
-        return (
-            <div className="UserDashboard">
-                <div className="lander">
-                    <h1>User's Dashboard</h1>
-
-
-                    { // Show User's employee info if not null: (using ternary operator: (bool)? TRUE : FALSE ):
+/*
+    { // Show User's employee info if not null: (using ternary operator: (bool)? TRUE : FALSE ):
                         (this.state.user_employee != null)?
                             <div className="employee_info">
-                                <h2>Hello, {this.state.user_employee.first_name} {this.state.user_employee.last_name}</h2>
+                                <h2>{this.state.user_employee.first_name} {this.state.user_employee.last_name}</h2>
                                 <p>Employee # : {this.state.user_employee.emp_no}</p>
                                 <p>Hire Date : {this.state.user_employee.hire_date}</p>
                             </div>
@@ -286,11 +277,64 @@ export default class EmployeeDetail extends Component {
                             : // if is null:
                             <p>Loading Employee Department Data...</p>
                     }
+ */
+
+
+
+    getDateString = (date) => {
+        var dateString = new String(date);
+        dateString = dateString.split("T");
+
+        return dateString[0];
+    }
+
+    render() {
+        return (
+            <div className="EmployeeDetail">
+                <div className="lander">
+                    <h3>Employee Information</h3>
 
                     { // Show User's salary info if not null: (using ternary operator: (bool)? TRUE : FALSE ):
-                        (this.state.user_salary != null)?
+                        (this.state.user_employee != null
+                            && this.state.user_title_info != null
+                            && this.state.user_department != null
+                            && this.state.user_salary != null)?
                             <div className="employee_info">
-                                <h4>Current salary: ${this.state.user_salary.salary}</h4>
+
+                                <div class="list-group">
+                                    <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h7 class="text-muted">Employee Name:</h7>
+                                            <h3 class="mb-1">{this.state.user_employee.first_name} {this.state.user_employee.last_name}</h3>
+                                            <h7 class="text-muted">Employee Number:</h7>
+                                            <h4 class="text-muted">{this.state.user_employee.emp_no}</h4>
+                                            <h5 class="text-muted">Hire Date: {this.getDateString(this.state.user_employee.hire_date)} </h5>
+                                        </div>
+                                    </a>
+                                    <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h7 class="mb-1">Department:</h7>
+                                            <h4 class="mb-1">{this.state.user_department.dept_name}</h4>
+                                            <h7 class="text-muted">Department Number:</h7>
+                                            <h4 class="text-muted">{this.state.user_department.dept_no}</h4>
+                                            <h5 class="text-muted">In Department since : {this.getDateString(this.state.user_department.from_date)}</h5>
+                                        </div>
+                                    </a>
+                                    <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h7 class="mb-1">Title:</h7>
+                                            <h4 class="mb-1">{this.state.user_title_info.title}</h4>
+                                            <h5 class="text-muted">since {this.getDateString(this.state.user_title_info.from_date)}</h5>
+                                        </div>
+                                    </a>
+                                    <a class="list-group-item list-group-item-action flex-column align-items-start">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h7 class="mb-1">Current salary:</h7>
+                                            <h4 class="mb-1">${this.state.user_salary.salary}</h4>
+                                        </div>
+                                    </a>
+                                </div>
+
                             </div>
 
                             : // if is null:
