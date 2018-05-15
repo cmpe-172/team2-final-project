@@ -317,7 +317,7 @@ export default class EmployeeDetail extends Component {
                                             <h4 class="mb-1">{this.state.user_department.dept_name}</h4>
                                             <h7 class="text-muted">Department Number:</h7>
                                             <h4 class="text-muted">{this.state.user_department.dept_no}</h4>
-                                            <h5 class="text-muted">In Department since : {this.getDateString(this.state.user_department.from_date)}</h5>
+                                            <h5 class="text-muted">In department since: {this.getDateString(this.state.user_department.from_date)}</h5>
                                         </div>
                                     </a>
                                     <a class="list-group-item list-group-item-action flex-column align-items-start">
